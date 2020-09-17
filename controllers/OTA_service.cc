@@ -64,7 +64,10 @@ bool checkSnList(std::string &stbid)
         while(std::getline (snlist, line))
         {
             if(line == stbid)
+            {
                 check = true;   
+                break;
+            }
         }
         snlist.close();
     }
