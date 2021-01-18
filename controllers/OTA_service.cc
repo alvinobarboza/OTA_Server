@@ -86,13 +86,34 @@ void service::getTest(const HttpRequestPtr& req,
     Json::Value requestJson, reponseJson,  configJson;
     
     reponseJson["ok"] = " ok ";
-    
+    MultiPartParser fileUpload;
 
+    if (fileUpload.parse(req) == 0)
+    {
+        auto &files = fileUpload.getFiles();
+
+        for (auto const &file : files)
+        {
+            LOG_DEBUG << "File: " <<file.getFileName()
+                        << " Size: "<<file.fileLength();
+        }
+        for (auto &param : fileUpload.getParameters())
+        {
+            LOG_DEBUG<< "First: "<< param.first << " Second: "<<param.second;
+        }
+    }
+    else
+    {
+        LOG_DEBUG;
+    }
+    
+    
+/*
     std::ifstream snlist ("snlist.txt");
     std::string line, requestS{""};
 
     int i {0}, y{0};
-
+    
     if(snlist.is_open())
     {
         while(std::getline (snlist, line))
@@ -157,9 +178,8 @@ void service::getTest(const HttpRequestPtr& req,
     {
         std::cout << "No file found \n";
     }
-
+ */
     
-
     auto resp=HttpResponse::newHttpJsonResponse(reponseJson);
     callback(resp);
 }
